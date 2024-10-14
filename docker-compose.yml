@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: ./auth-service  # Directory where Dockerfile is located
+    container_name: auth-service-container
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_USER : postgres
+      POSTGRES_PASSWORD : 12345
+      POSTGRES_DB : microservices
+      POSTGRES_HOST : localhost
+      POSTGRES_PORT : 5432
+    depends_on:
+      - postgres  # Ensures PostgreSQL starts first before the FastAPI app
+
+  postgres:
+    image: postgres:13  # PostgreSQL version 13 image
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER : postgres
+      POSTGRES_PASSWORD : 12345
+      POSTGRES_DB : microservices
+      POSTGRES_HOST : localhost
+      POSTGRES_PORT : 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist database data
+
+volumes:
+  postgres_data:
